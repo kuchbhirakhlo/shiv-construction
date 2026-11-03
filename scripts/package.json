@@ -1,0 +1,9 @@
+{
+  "name": "shivconstruction-scripts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "One-off admin scripts for the Shiv Construction Firebase project (shivconstruction-ad026)",
+  "dependencies": {
+    "firebase-admin": "^12.7.0"
+  }
+}

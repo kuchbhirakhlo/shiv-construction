@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 680" fill="none">
+  <defs>
+    <linearGradient id="wall" x1="90" y1="40" x2="830" y2="640" gradientUnits="userSpaceOnUse"><stop stop-color="#F5F2E6"/><stop offset="1" stop-color="#E2E8D9"/></linearGradient>
+    <linearGradient id="meter" x1="360" y1="150" x2="590" y2="545" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFDF6"/><stop offset="1" stop-color="#E8EBDD"/></linearGradient>
+    <linearGradient id="screen" x1="386" y1="235" x2="565" y2="337" gradientUnits="userSpaceOnUse"><stop stop-color="#1C3D2D"/><stop offset="1" stop-color="#376A4A"/></linearGradient>
+    <filter id="shadow" x="281" y="112" width="387" height="502" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feGaussianBlur stdDeviation="22"/></filter>
+  </defs>
+  <rect width="900" height="680" rx="36" fill="url(#wall)"/>
+  <circle cx="710" cy="137" r="101" fill="#D8E3CD" opacity=".66"/>
+  <path d="M0 548c152-53 266-55 394-10 132 47 280 43 506-36v178H0V548Z" fill="#D6DEC9"/>
+  <path d="M0 592c175-45 316-31 447 8 139 42 280 31 453-24v104H0v-88Z" fill="#C7D3BB"/>
+  <path d="M0 114h900M0 132h900M79 0v680M96 0v680" stroke="#D7D8C9" stroke-width="2" opacity=".55"/>
+  <path d="M193 249h105v18h-105v-18Zm398 0h116v18H591v-18Z" fill="#B8C3AE"/>
+  <path d="M229 267v118c0 49 40 89 89 89h58" stroke="#7D8F7D" stroke-width="14" stroke-linecap="round"/>
+  <path d="M670 267v118c0 49-40 89-89 89h-35" stroke="#7D8F7D" stroke-width="14" stroke-linecap="round"/>
+  <rect x="324" y="147" width="274" height="405" rx="42" fill="#153C2A" opacity=".25" filter="url(#shadow)"/>
+  <rect x="342" y="132" width="258" height="416" rx="38" fill="url(#meter)" stroke="#9AA791" stroke-width="5"/>
+  <rect x="362" y="154" width="218" height="370" rx="27" fill="#F8F8F0" stroke="#D5D9CC" stroke-width="3"/>
+  <circle cx="471" cy="194" r="9" fill="#BD8B21"/>
+  <text x="471" y="221" fill="#506252" font-family="Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="2" text-anchor="middle">SMART METER</text>
+  <rect x="385" y="244" width="172" height="100" rx="13" fill="url(#screen)"/>
+  <text x="402" y="274" fill="#B9D8A9" font-family="Arial,sans-serif" font-size="12" font-weight="700" letter-spacing="1.4">ENERGY USE</text>
+  <text x="402" y="316" fill="#F5F4E8" font-family="Arial,sans-serif" font-size="32" font-weight="700">128.4</text>
+  <text x="522" y="316" fill="#B9D8A9" font-family="Arial,sans-serif" font-size="14" font-weight="700">kWh</text>
+  <circle cx="471" cy="382" r="25" fill="#E9EDDF" stroke="#BAC6B1" stroke-width="3"/>
+  <path d="M471 365v17l12 9" stroke="#31593D" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="408" y="430" width="126" height="9" rx="4.5" fill="#D3D8CA"/>
+  <rect x="427" y="454" width="88" height="9" rx="4.5" fill="#D3D8CA"/>
+  <circle cx="471" cy="495" r="8" fill="#BD8B21"/>
+  <rect x="88" y="154" width="166" height="76" rx="20" fill="#FFFEF8" stroke="#E1DDC8" stroke-width="2"/>
+  <path d="M122 194h32m-16-16v32" stroke="#BD8B21" stroke-width="5" stroke-linecap="round"/>
+  <text x="173" y="190" fill="#274B35" font-family="Arial,sans-serif" font-size="13" font-weight="700">CLEAR READINGS</text>
+  <text x="173" y="209" fill="#718070" font-family="Arial,sans-serif" font-size="11">Track your usage</text>
+  <rect x="652" y="436" width="162" height="78" rx="20" fill="#FFFEF8" stroke="#E1DDC8" stroke-width="2"/>
+  <path d="m683 474 11 11 22-25" stroke="#3C7651" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="729" y="472" fill="#274B35" font-family="Arial,sans-serif" font-size="12" font-weight="700">SMARTER</text>
+  <text x="729" y="492" fill="#718070" font-family="Arial,sans-serif" font-size="11">Energy insights</text>
+</svg>
