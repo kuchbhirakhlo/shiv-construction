@@ -73,7 +73,7 @@ node scripts/provision_staff_auth.js
 
 Then check them with `node scripts/check_staff_login.js`. SWT-SM-0001 is provisioned and verified. (The `SWT-` prefix comes from the admin panel's template.)
 
-If the admin panel logs `counters/staffId_*` permission errors, publish the `counters` rule: `node scripts/add_counters_rule.js --apply` (see `firestore.rules`). For `auth/invalid-credential` on add-staff, see `admin-panel/README.md` (deploy `provisionStaffLogin`, patch Vercel admin app, or delete the conflicting Auth user with `node scripts/delete_staff_auth_by_employee_id.js <employeeId>`).
+If the admin panel logs `counters/staffId_*` permission errors, publish the `counters` rule: `node scripts/add_counters_rule.js --apply` (see `firestore.rules`). For staff add / `auth/invalid-credential`, use the Vercel admin sources in `admin-panel/src/` (see `admin-panel/README.md`).
 
 **Phone auth.** Phone sign-in is enabled. The test number is `+91 98765 43210`, with OTP `123456`, so no real SMS is sent. The debug keystore's and the release upload key's SHA-1 and SHA-256 are registered (`scripts/register_sha.js`). After enrolling in Play App Signing, add Play's app-signing key fingerprints there too and re-run the script.
 

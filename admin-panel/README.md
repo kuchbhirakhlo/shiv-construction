@@ -1,50 +1,50 @@
-# Admin panel fix: `auth/invalid-credential` when adding staff
+# Shiv Construction — admin staff panel (Vercel website)
 
-The live site ([shivconstruction-liart.vercel.app](https://shivconstruction-liart.vercel.app)) provisions staff login **in the browser** before writing Firestore. When `<employeeId>@staff.shivconstruction.app` is already registered with a **different** password, `signInWithEmailAndPassword` fails with `auth/invalid-credential` and **no staff doc is saved**.
+Drop-in sources for the **Staff & HR** page on [shivconstruction-liart.vercel.app](https://shivconstruction-liart.vercel.app). Based on Solar Universe’s `AdminStaff.tsx`, adapted for:
 
-The mobile app expects `staff/{docId}` where **doc id = Firebase Auth uid** (see `scripts/provision_staff_auth.js`).
+- Firebase project **`shivconstruction-ad026`**
+- Staff Auth email domain **`staff.shivconstruction.app`** (must match the Flutter app)
+- Employee ID prefix **`SWT`** (e.g. `SWT-SM-0001`)
+- **`provisionStaffLogin`** Cloud Function (Admin SDK) instead of browser `createUserWithEmailAndPassword`
 
-## Fix (recommended)
+**Do not edit Solar Universe** — only copy from here into your website repo.
 
-1. **Deploy Cloud Functions** from this repo (not deployed yet — `provisionStaffLogin` returns 404):
+## Files
+
+| This repo | Copy to website |
+|-----------|-----------------|
+| `src/components/AdminStaff.tsx` | `src/components/AdminStaff.tsx` |
+| `src/firebase/config.ts` | Merge into `src/firebase/config.ts` (`provisionStaffLoginCall`, `staffAuthEmail`, domain) |
+| `src/firebase/db.staff.ts` | Merge exports into `src/firebase/db.ts` (or re-export) |
+| `src/types/staff.ts` | Ensure `Staff` includes `authEmail` (merge into `src/types.ts`) |
+| `src/utils/exportExcel.ts` | Same path if missing |
+
+## Before staff add works end-to-end
+
+1. Deploy functions (once per project):
 
    ```bash
    cd functions && npm ci
    firebase deploy --only functions:provisionStaffLogin,functions:onStaffWritten --project shivconstruction-ad026
    ```
 
-2. **Publish Firestore `counters` rule** if employee ID allocation fails with permission denied:
+2. If employee ID counters fail with permission denied:
 
    ```bash
-   cd scripts && npm ci
-   node add_counters_rule.js --apply
+   cd scripts && node add_counters_rule.js --apply
    ```
 
-3. **Patch the Vercel admin app** (copy the snippets below into your website repo’s `src/firebase/` and `src/components/AdminStaff.tsx`, then redeploy).
+3. Redeploy the Vercel site after copying these files.
 
-### `src/firebase/staffAuthProvision.ts`
+## Auth conflicts
 
-Copy from [`staff-auth-provision.ts`](./staff-auth-provision.ts) (adjust the `app` import path).
+If you see `auth/invalid-credential` on an **old** deployment that still uses browser sign-up, delete the conflicting user in Firebase Authentication or run:
 
-### Replace `createOrVerifyStaffAuthAccount` in `src/firebase/config.ts`
+```bash
+node scripts/delete_staff_auth_by_employee_id.js <employeeId>
+```
 
-Delete the secondary-app `createUser` / `signIn` flow. Use the snippet in [`config.staff-auth.ts`](./config.staff-auth.ts).
-
-### `AdminStaff.tsx` — `handleSubmit` (after `generateEmployeeId`)
-
-Use the flow in [`AdminStaff.handleSubmit.tsx`](./AdminStaff.handleSubmit.tsx): pick `staffId = crypto.randomUUID()`, call `provisionStaffLoginCall`, then `addStaffWithId(staffId, payload)`.
-
-## Workaround without redeploying the website
-
-- In [Firebase Console → Authentication](https://console.firebase.google.com/project/shivconstruction-ad026/authentication/users), search for `<employeeId>@staff.shivconstruction.app` and **delete** the user, then add staff again with the password you want.
-
-- Or run (requires `scripts/serviceAccountKey.json`):
-
-  ```bash
-  node scripts/delete_staff_auth_by_employee_id.js SWT-SM-0002
-  ```
-
-After a staff doc exists without auth, run:
+Fallback after bulk imports:
 
 ```bash
 node scripts/provision_staff_auth.js
