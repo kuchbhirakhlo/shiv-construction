@@ -1,9 +1,11 @@
 const functions = require("firebase-functions/v1");
 const { initializeApp } = require("firebase-admin/app");
 const { getAuth } = require("firebase-admin/auth");
+const { getFirestore } = require("firebase-admin/firestore");
 const { logger } = require("firebase-functions");
 
 initializeApp();
+const db = getFirestore();
 
 const EMAIL_DOMAIN = "staff.shivconstruction.app";
 
@@ -49,6 +51,45 @@ async function provisionStaffAuth(staffId, data) {
   await auth.setCustomUserClaims(staffId, claims);
   return { done: staffId, email };
 }
+
+/**
+ * Callable from the admin panel when client-side createUserWithEmailAndPassword
+ * fails (sign-up restrictions, email already registered with a different password,
+ * etc.). Uses the Admin SDK so staff Auth provisioning does not depend on public
+ * sign-up. Caller must be signed in with a real admin email (listed in /admins).
+ */
+exports.provisionStaffLogin = functions.region("asia-south1").https.onCall(async (data, context) => {
+  if (!context.auth || !context.auth.token.email) {
+    throw new functions.https.HttpsError("permission-denied", "Sign in to the admin panel first.");
+  }
+  const adminEmail = context.auth.token.email.toLowerCase();
+  const adminSnap = await db.collection("admins").where("email", "==", adminEmail).limit(1).get();
+  if (adminSnap.empty && !context.auth.token.admin) {
+    throw new functions.https.HttpsError("permission-denied", "Only admins can provision staff logins.");
+  }
+
+  const staffId = data && data.staffId;
+  const employeeId = data && data.employeeId;
+  const password = data && data.password;
+  const role = (data && data.role) || null;
+  if (!staffId || !employeeId || !password) {
+    throw new functions.https.HttpsError("invalid-argument", "staffId, employeeId, and password are required.");
+  }
+  if (typeof password !== "string" || password.length < 6) {
+    throw new functions.https.HttpsError("invalid-argument", "Password must be at least 6 characters.");
+  }
+
+  try {
+    const result = await provisionStaffAuth(staffId, { employeeId, password, role });
+    if (result.skipped) {
+      throw new functions.https.HttpsError("failed-precondition", `Provisioning skipped: ${result.skipped}`);
+    }
+    return { uid: staffId, email: result.email };
+  } catch (err) {
+    logger.error("provisionStaffLogin failed", { staffId, error: err.message });
+    throw new functions.https.HttpsError("internal", err.message || "Provisioning failed.");
+  }
+});
 
 // 1st-gen Firestore trigger in the database region (asia-south1).
 exports.onStaffWritten = functions.region("asia-south1").firestore.document("staff/{staffId}").onWrite(async (change, context) => {

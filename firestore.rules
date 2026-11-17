@@ -93,5 +93,12 @@ service cloud.firestore {
       allow read: if true;
       allow write: if request.auth != null && request.auth.token.email != null;
     }
+
+    // Sequential IDs for quotations and staff (counters/quotationCounter,
+    // counters/staffId_<role-code>) are updated in transactions from the
+    // Firebase-Auth'd admin panel — default-deny without this block.
+    match /counters/{document} {
+      allow read, write: if request.auth != null && request.auth.token.email != null;
+    }
   }
 }

@@ -73,6 +73,8 @@ node scripts/provision_staff_auth.js
 
 Then check them with `node scripts/check_staff_login.js`. SWT-SM-0001 is provisioned and verified. (The `SWT-` prefix comes from the admin panel's template.)
 
+If the admin panel logs `counters/staffId_*` permission errors, publish the `counters` rule: `node scripts/add_counters_rule.js --apply` (see `firestore.rules`). For `auth/invalid-credential` on add-staff, deploy `functions` and wire the Vercel app to `provisionStaffLogin` (`admin-panel/staff-auth-provision.ts`).
+
 **Phone auth.** Phone sign-in is enabled. The test number is `+91 98765 43210`, with OTP `123456`, so no real SMS is sent. The debug keystore's and the release upload key's SHA-1 and SHA-256 are registered (`scripts/register_sha.js`). After enrolling in Play App Signing, add Play's app-signing key fingerprints there too and re-run the script.
 
 **Cloud Storage (Blaze, enabled 2026-10-19).** The bucket is `shivconstruction-ad026.firebasestorage.app`. `storage.rules` lets staff and admins (via custom claims from `provision_staff_auth.js`) upload images and PDFs under 10 MB to three paths:
